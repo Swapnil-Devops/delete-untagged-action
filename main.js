@@ -12,9 +12,9 @@ async function main() {
     const accountType = personalAccount ? 'users' : 'orgs';
     const [owner, repo] = repository.split('/');
     const package = packageName || repo;
-    const getUrl = `GET /${accountType}/${owner}/packages/container/${package}/versions`;
+    const getUrl = `GET /${accountType}/${owner}/packages/container/${package}`;
     const { data: versions } = await github.request(getUrl);
-    // console.log("data=",versions);
+    console.log("data=",versions);
     for (const version of versions) {
       const { metadata } = version;
       const { container } = metadata;
