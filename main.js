@@ -14,11 +14,12 @@ async function main() {
     const package = packageName || repo;
     const getUrl = `GET /${accountType}/${owner}/packages/container/${package}/versions`;
     const { data: versions } = await github.request(getUrl);
-    console.log("data=",versions);
+    // console.log("data=",versions);
     for (const version of versions) {
       const { metadata } = version;
       const { container } = metadata;
       const { tags } = container;
+      console.log("container=",container);
 
       // if (!tags.length) {
       //   const { id } = version;
