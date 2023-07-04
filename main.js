@@ -14,6 +14,7 @@ async function main() {
     const package = packageName || repo;
     const getUrl = `GET /${accountType}/${owner}/packages/container/${package}`;
     const { data: metadata } = await github.request(getUrl);
+    console.log("metadata=",metadata);
     core.setOutput('package-metadata', JSON.stringify(metadata));
   } catch (error) {
     core.setFailed(error.message);
