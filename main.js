@@ -5,11 +5,10 @@ async function main() {
   try {
     const token = core.getInput('github-token', { required: true });
     const packageName = core.getInput('package-name');
-    const personalAccount = core.getInput('personal-account');
     const repository = core.getInput('repository');
     const github = getOctokit(token);
 
-    const accountType = personalAccount ? 'users' : 'orgs';
+    const accountType = 'orgs';
     const [owner, repo] = repository.split('/');
     const package = packageName || repo;
     const getUrl = `GET /${accountType}/${owner}/packages/container/${package}`;
