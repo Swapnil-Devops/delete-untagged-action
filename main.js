@@ -11,7 +11,7 @@ async function main() {
     const accountType = 'orgs';
     const [owner, repo] = repository.split('/');
     const package = packageName || repo;
-    const getUrl = `GET /${accountType}/${owner}/packages/container/${package}`;
+    const getUrl = `GET /${owner}/packages/container/${package}`;
     const { data: metadata } = await github.request(getUrl);
     console.log("metadata=",metadata);
     core.setOutput('package-metadata', JSON.stringify(metadata));
