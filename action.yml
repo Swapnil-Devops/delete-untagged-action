@@ -1,4 +1,4 @@
-name: Delete Untagged
+name: package metadata
 description: Deletes all untagged image versions from the GitHub Packages container registry.
 branding:
   color: red
