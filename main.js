@@ -20,7 +20,7 @@ async function main() {
 
     const query = `query($owner: String!, $repo: String!, $package: String!) {
       repository(owner: $owner, name: $repo) {
-        packages(first: 1, names: [$package], packageType: CONTAINER) {
+        packages(first: 1, names: [$package], packageType: DOCKER) {
           edges {
             node {
               latestVersion {
