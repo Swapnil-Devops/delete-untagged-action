@@ -1,5 +1,5 @@
 const core = require('@actions/core');
-const { graphql } = require('@octokit/graphql');
+const { getOctokit } = require('@actions/github');
 
 async function main() {
   try {
@@ -7,48 +7,15 @@ async function main() {
     const packageName = core.getInput('package-name');
     const namespace = core.getInput('namespace');
     const repository = core.getInput('repository');
+    const github = getOctokit(token);
 
-    const octokit = graphql.defaults({
-      headers: {
-        authorization: `Bearer ${token}`,
-      },
-    });
-
-    const accountType = namespace ? 'User' : 'Organization';
+    const accountType = namespace ? 'users' : 'orgs';
     const [owner, repo] = repository.split('/');
     const package = packageName || repo;
-
-    const query = `query($owner: String!, $repo: String!, $package: String!) {
-      repository(owner: $owner, name: $repo) {
-        packages(first: 1, names: [$package], packageType: DOCKER) {
-          edges {
-            node {
-              latestVersion {
-                id
-                version
-              }
-            }
-          }
-        }
-      }
-    }`;
-
-    const variables = {
-      owner,
-      repo,
-      package,
-    };
-
-    const response = await octokit(query, variables);
-    const version = response.repository.packages.edges[0]?.node.latestVersion.version;
-
-    if (version) {
-      console.log(`Latest version of package '${package}': ${version}`);
-      core.setOutput('package-version', version);
-    } else {
-      console.log(`Package '${package}' not found or no versions available.`);
-      core.setFailed(`Package '${package}' not found or no versions available.`);
-    }
+    const getUrl = `GET /${accountType}/${owner}/packages/container/${package}`;
+    const { data: metadata } = await github.request(getUrl);
+    console.log("metadata=",metadata);
+    core.setOutput('package-metadata', JSON.stringify(metadata));
   } catch (error) {
     core.setFailed(error.message);
   }
