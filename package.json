@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Deletes all untagged image versions from the GitHub Packages container registry.",
   "license": "MIT",
-  "main": "main.js",
+  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/camargo/delete-untagged-action.git"
