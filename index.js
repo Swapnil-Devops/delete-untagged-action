@@ -1,5 +1,6 @@
 const core = require('@actions/core');
 const { getOctokit } = require('@actions/github');
+const { graphql } = require("@octokit/graphql");
 
 async function main() {
   try {
