@@ -1,14 +1,14 @@
 name: package metadata
-description: Deletes all untagged image versions from the GitHub Packages container registry.
+description: Get package metadata from the GitHub Packages container registry.
 branding:
   color: red
   icon: file-minus
 inputs:
   github-token:
-    description: A GitHub token with the 'delete:packages' permission.
+    description: A GitHub token with the 'read:packages' permission.
     required: true
   package-name:
-    description: Override the package name that contains the untagged versions you want to delete.
+    description: Name of the package to fetch the metadata.
     required: false
   namespace:
     default: false
@@ -17,7 +17,7 @@ inputs:
   
   repository:
     default: ${{ github.repository }}
-    description: The owner and repository name. For example, 'Codertocat/Hello-World'.
+    description: The owner and repository name. 
     required: false
 runs:
   using: node16
