@@ -1,24 +1,26 @@
-const core = require('@actions/core');
-const { getOctokit } = require('@actions/github');
+const core = require("@actions/core");
+const github = require("@actions/github");
 
-async function main() {
+async function main(_core, _github) {
   try {
-    const token = core.getInput('github-token', { required: true });
-    const packageName = core.getInput('package-name');
-    const namespace = core.getInput('namespace');
-    const repository = core.getInput('repository');
-    const github = getOctokit(token);
+    const token = _core.getInput("github-token", { required: true });
+    const packageName = _core.getInput("package-name");
+    const namespace = _core.getInput("namespace");
+    const repository = _core.getInput("repository");
+    const octokit = _github.getOctokit(token);
 
-    const accountType = namespace ? 'users' : 'orgs';
-    const [owner, repo] = repository.split('/');
-    const package = packageName || repo;
-    const getUrl = `GET /${accountType}/${owner}/packages/container/${package}`;
-    const { data: metadata } = await github.request(getUrl);
-    console.log("metadata=",metadata);
-    core.setOutput('package-metadata', JSON.stringify(metadata));
+    const accountType = namespace ? "users" : "orgs";
+    const [owner, repo] = repository.split("/");
+    const _package = packageName || repo;
+    console.log("input data: ", token, packageName, namespace, repository);
+    const getUrl = `GET /${accountType}/${owner}/packages/container/${_package}`;
+    const { data: metadata } = await octokit.request(getUrl);
+    console.log("metadata=", metadata);
+    _core.setOutput("package-metadata", JSON.stringify(metadata));
   } catch (error) {
-    core.setFailed(error.message);
+    _core.setFailed(error.message);
   }
 }
 
-main();
+main(core, github);
+module.exports = { main };
