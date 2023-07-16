@@ -23,4 +23,8 @@ async function main(_core, _github) {
 }
 
 main(core, github);
+<<<<<<< HEAD
 module.exports = { main };
+=======
+module.exports = { main };
+>>>>>>> cb01f1542f7212a0d846257c5a54094275944b63
