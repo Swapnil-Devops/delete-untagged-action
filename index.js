@@ -1,59 +1,26 @@
-const core = require('@actions/core');
-const { getOctokit } = require('@actions/github');
-const { graphql } = require('@octokit/graphql');
+const core = require("@actions/core");
+const github = require("@actions/github");
 
-async function graphQuery() {
-  const token = core.getInput('github-token', { required: true });
-  const packageName = core.getInput('package-name');
-  const personalAccount = core.getInput('personal-account');
-  const repos = core.getInput('repository');
-  const github = getOctokit(token);
-  const [owner, repo] = repos.split('/');
-  const graphqlWithAuth = graphql.defaults({
-    headers: {
-      authorization: token,
-    },
-  });
-  console.log("repo token",token);
-  const { repository } = await graphqlWithAuth(`
-    {
-      repository(owner: "Swapnil-Devops", name: "my-package") {
-        issues(last: 3) {
-          edges {
-            node {
-              title
-            }
-          }
-        }
-      }
-    }
-  `);
-  console.log("repo",repository);
-}
-async function restQuery() {
+async function main(_core, _github) {
   try {
-    const token = core.getInput('github-token', { required: true });
-    const packageName = core.getInput('package-name');
-    const personalAccount = core.getInput('personal-account');
-    const repository = core.getInput('repository');
-    const github = getOctokit(token);
+    const token = _core.getInput("github-token", { required: true });
+    const packageName = _core.getInput("package-name");
+    const namespace = _core.getInput("namespace");
+    const repository = _core.getInput("repository");
+    const octokit = _github.getOctokit(token);
 
-    const accountType = personalAccount ? 'users' : 'orgs';
-    const [owner, repo] = repository.split('/');
-    const package = packageName || repo;
-    // rest: Swapnil-Devops my-package my-package orgs
-    console.log("rest:",owner,repo, package, accountType);
-    const getUrl = `GET /${accountType}/${owner}/packages/container/${package}`;
-    const { data: metadata } = await github.request(getUrl);
-    console.log('metadata=', metadata);
-    core.setOutput('package-metadata', JSON.stringify(metadata));
+    const accountType = namespace ? "users" : "orgs";
+    const [owner, repo] = repository.split("/");
+    const _package = packageName || repo;
+    console.log("input data: ", token, packageName, namespace, repository);
+    const getUrl = `GET /${accountType}/${owner}/packages/container/${_package}`;
+    const { data: metadata } = await octokit.request(getUrl);
+    console.log("metadata=", metadata);
+    _core.setOutput("package-metadata", JSON.stringify(metadata));
   } catch (error) {
-    core.setFailed(error.message);
+    _core.setFailed(error.message);
   }
 }
 
-async function main() {
-  graphQuery();
-}
-
-main();
+main(core, github);
+module.exports = { main };
